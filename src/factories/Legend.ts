@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 
 import * as Utils from '../utils/_index';
-import * as Options from '../options/_index';
+import { Options, SeriesOptions, Dimensions } from '../options/_index';
 
 import { BaseFactory } from './BaseFactory';
 import { Container } from './Container';
@@ -26,16 +26,16 @@ export class Legend extends BaseFactory {
   }
 
   legendClick() {
-    return (selection: d3.Selection<Options.SeriesOptions>) => {
+    return (selection: d3.Selection<SeriesOptions>) => {
       return selection.on('click', (series) => {
         this.eventMgr.trigger('legend-click', series);
       });
     };
   }
 
-  update(data: Utils.Data, options: Options.Options) {
+  update(data: Utils.Data, options: Options) {
     var container = <Container> this.factoryMgr.get('container');
-    var dim: Options.Dimensions = container.getDimensions();
+    var dim: Dimensions = container.getDimensions();
 
     var init = (series) => {
       var items = series.append('div').attr({'class': 'item'})
@@ -47,7 +47,7 @@ export class Legend extends BaseFactory {
 
     var update = (series) => {
       series
-        .attr('class', (d: Options.SeriesOptions) => 'item ' + d.type.join(' '))
+        .attr('class', (d: SeriesOptions) => 'item ' + d.type.join(' '))
         .classed('legend-hidden', (d) => !d.visible);
       series.select('.icon').style('background-color', (d) => d.color);
       series.select('.legend-label').text((d) => d.label);

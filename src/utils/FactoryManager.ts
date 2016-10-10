@@ -1,3 +1,5 @@
+import * as ng from 'angular';
+
 import * as Options from '../options/_index';
 import { EventManager} from './EventManager';
 

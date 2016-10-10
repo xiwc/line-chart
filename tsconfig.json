@@ -10,8 +10,7 @@
     "skipLibCheck": true,
     "target": "es5",
     "module": "commonjs",
-    "sourceMap": true,
-    "out": "build/LineChart.js"
+    "sourceMap": true
   },
   "include": [
     "./src/angularjs/module.ts",

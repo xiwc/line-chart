@@ -2,6 +2,9 @@ import * as d3 from 'd3';
 
 import * as Utils from '../utils/_index';
 
+// Prevents TSC error 4053... Go figure...
+import { IPoint } from '../utils/dataset';
+
 import { Options } from './Options';
 
 export interface ISeriesOptions {
@@ -11,7 +14,7 @@ export interface ISeriesOptions {
   label: string;
   type: string[];
   id: string;
-  defined: (point: Utils.IPoint) => boolean;
+  defined: (point: IPoint) => boolean;
   color: string;
   visible: boolean;
   interpolation: {tension: number, mode: string};

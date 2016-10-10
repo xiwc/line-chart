@@ -6,7 +6,7 @@ import * as Options from '../options/_index';
 import { BaseFactory } from './BaseFactory';
 import { Container, ICoordinates } from './Container';
 
-interface INeighbour {
+export interface INeighbour {
   row: any;
   series: Options.SeriesOptions;
 }
