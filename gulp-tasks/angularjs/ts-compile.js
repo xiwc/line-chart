@@ -3,7 +3,6 @@ module.exports = function(gulp, $, paths) {
     return gulp
       .src(paths.source.root.angular)
       .pipe($.typescript({
-        module: 'CommonJS',
         out: 'LineChart.js'
       }))
       .pipe(gulp.dest(paths.source.to))

@@ -4,7 +4,6 @@ module.exports = function(gulp, $, paths) {
     return gulp
       .src(paths.source.root.react)
       .pipe($.typescript({
-        module: 'CommonJS',
         out: 'LineChart-react.js'
       }))
       .pipe(gulp.dest(paths.source.to))

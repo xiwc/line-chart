@@ -1,1 +1,1 @@
-/// <reference path='TwoSpeedAxis.ts' />
+export * from './TwoSpeedAxis';
