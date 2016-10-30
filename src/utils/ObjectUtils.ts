@@ -41,7 +41,7 @@ export class ObjectUtils {
   public static extend<T>(target: T, source): T {
     let {copy, extend, sameType, isReference, isFunction} = ObjectUtils;
 
-    let result = Utils.ObjectUtils.copy(target);
+    let result = ObjectUtils.copy(target);
 
     if (!source) {
       return result;

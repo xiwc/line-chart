@@ -15,6 +15,7 @@
   },
   "include": [
     "./src/angularjs/module.ts",
-    "./src/react/LineChart.ts"
+    "./src/react/LineChart.ts",
+    "./src/utils/**/*.spec.ts"
   ]
 }

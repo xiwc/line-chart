@@ -1,10 +1,11 @@
-/// <reference path='../test.spec.ts' />
+import * as angular from 'angular';
+import * as angularMocks from 'angular-mocks';
 
 describe('n3charts.LineChart', () => {
-  beforeEach(angular.mock.module('testUtils'));
-  beforeEach(angular.mock.module('n3-line-chart'));
+  beforeEach((angularMocks as any).mock.module('testUtils'));
+  beforeEach((angularMocks as any).mock.module('n3-line-chart'));
 
-  var element:any;
+  var element: any;
   var innerScope: any;
   var outerScope: any;
 
