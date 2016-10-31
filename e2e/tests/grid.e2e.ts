@@ -2,7 +2,7 @@
 
 describe('grid', function() {
   beforeEach(function() {
-    browser.get('test/e2e/grid.html');
+    browser.get('grid.html');
 
     // TODO : find a way to factorize this
     // Needed for click actions or the like on non-angular pages.

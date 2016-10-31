@@ -2,7 +2,7 @@
 
 describe('n3Charts.Utils.AxisOptions.tickFormat', function() {
   beforeEach(function() {
-    browser.get('test/e2e/tick_format.html');
+    browser.get('tick_format.html');
   });
 
   it('should have formatted x ticks', function() {

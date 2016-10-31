@@ -32,24 +32,31 @@ const transpile = () => {
   return deferred.promise;
 };
 
-const runTests = ([jsFiles, serveResult]) => {
+const runTests = () => {
   const deferred = Q.defer();
 
-  if (!jsFiles || !jsFiles.length) throw new Error('No test files found');
+  glob('.tmp/test/e2e/*.e2e.js', (er, files) => {
+    let child = exec('protractor --specs ' + files.join(',') + ' config/protractor.conf.js');
 
-  let child = exec('protractor --specs ' + jsFiles.join(',') + ' config/protractor.conf.js');
-
-  child.stdout.pipe(process.stdout);
-  child.stderr.pipe(process.stderr);
-  child.on('exit', deferred.resolve);
+    child.stdout.pipe(process.stdout);
+    child.stderr.pipe(process.stderr);
+    child.on('exit', deferred.resolve);
+  });
 
   return deferred.promise;
 };
 
-var transpilation = transpile();
-var demoStuff = generateDemo().then(serve);
+const run = (project) => {
+  console.log('Running e2e tests on ' + project);
+  let server = serve(project);
 
-Q.all([transpilation, demoStuff])
-  .then(runTests)
+  return server.start()
+    .then(runTests)
+    .then(server.stop);
+};
+
+Q.all([transpile(), generateDemo()])
+  .then(run.bind(this, 'react'))
+  .then(run.bind(this, 'angularjs'))
   .then(process.exit)
   .done();

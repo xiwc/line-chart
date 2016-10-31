@@ -2,7 +2,7 @@
 
 describe('n3Charts.Factory.Series.Dot', function() {
   beforeEach(function() {
-    browser.get('test/e2e/dot.html');
+    browser.get('dot.html');
   });
 
   it('should generate a chart', function() {

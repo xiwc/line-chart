@@ -2,7 +2,7 @@
 
 describe('Tooltip with hook - returns false', function() {
   beforeEach(function() {
-    browser.get('test/e2e/tooltip_hook_false.html');
+    browser.get('tooltip_hook_false.html');
   });
 
   it('should generate a chart', function() {

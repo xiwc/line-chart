@@ -4,7 +4,7 @@
 
 describe('Axis padding', function() {
   beforeEach(function() {
-    browser.get('test/e2e/axis_padding.html');
+    browser.get('axis_padding.html');
   });
 
 

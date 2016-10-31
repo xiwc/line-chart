@@ -2,7 +2,7 @@
 
 describe('Sync', function() {
   beforeEach(function() {
-    browser.get('test/e2e/index.html');
+    browser.get('index.html');
   });
 
   var chart0;

@@ -14,7 +14,7 @@ describe('Pan & zoom', function() {
 
 
   beforeEach(function() {
-    browser.get('test/e2e/pan_zoom.html');
+    browser.get('pan_zoom.html');
   });
 
   var hasClass = function(element, cls) {

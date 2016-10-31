@@ -2,7 +2,7 @@
 
 describe('symbols', function() {
   beforeEach(function() {
-    browser.get('test/e2e/symbols.html');
+    browser.get('symbols.html');
   });
 
   var checkTicks = function(axisSide, expected, element) {

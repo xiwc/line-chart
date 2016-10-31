@@ -4,25 +4,37 @@ const express = require('express');
 const serveStatic = require('serve-static');
 const Q = require('q');
 
-const serve = () => {
-  const deferred = Q.defer();
+const serve = function(project) {
+  if (['angularjs', 'react'].indexOf(project) === -1) throw new Error('Unsupported project : ' + project);
 
-  const app = express()
+  const port = 1234;
 
-  app.use(serveStatic('.tmp'));
-  app.use(serveStatic('node_modules'));
-  app.listen(1234, () => {
-    console.log('Listening on port 1234...');
-    deferred.resolve();
-  });
+  const app = express();
+  var server;
 
-  return deferred.promise;
+  const start = function() {
+    let deferred = Q.defer();
+    app.use(serveStatic('.tmp/test/e2e/' + project));
+    app.use(serveStatic('.tmp/build'));
+    app.use(serveStatic('node_modules'));
+    server = app.listen(port, () => {
+      console.log('Serving ' + project + ' on port ' + port + '...');
+      deferred.resolve();
+    });
+    return deferred.promise;
+  };
+
+  const stop = function() {
+    let deferred = Q.defer();
+    server.close(deferred.resolve);
+    return deferred.promise;
+  };
+
+  return {start, stop};
 };
 
 if (require.main === module) {
-  serve();
+  serve(process.argv[2]);
 } else {
   module.exports = serve;
 }
-
-

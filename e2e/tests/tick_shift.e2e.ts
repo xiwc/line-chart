@@ -2,7 +2,7 @@
 
 describe('ticks shift in options', function() {
   beforeEach(function() {
-    browser.get('test/e2e/tick_shift.html');
+    browser.get('tick_shift.html');
   });
 
   it('should generate a chart', function() {

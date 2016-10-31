@@ -2,7 +2,7 @@
 
 describe('Tooltip with hook - returns an object', function() {
   beforeEach(function() {
-    browser.get('test/e2e/tooltip_hook_object.html');
+    browser.get('tooltip_hook_object.html');
   });
 
   it('should generate a chart', function() {

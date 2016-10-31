@@ -2,7 +2,7 @@
 
 describe('dot_radius_update', function() {
   beforeEach(function() {
-    browser.get('test/e2e/dot_radius_update.html');
+    browser.get('dot_radius_update.html');
 
     // TODO : find a way to factorize this
     // Needed for click actions or the like on non-angular pages.

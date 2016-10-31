@@ -2,7 +2,7 @@
 
 describe('n3Charts.Factory.Series.Column', function() {
   beforeEach(function() {
-    browser.get('test/e2e/column.html');
+    browser.get('column.html');
   });
 
   it('should generate a chart', function() {

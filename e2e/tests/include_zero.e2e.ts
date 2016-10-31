@@ -4,7 +4,7 @@
 
 describe('Include zero in axis options', function() {
   beforeEach(function() {
-    browser.get('test/e2e/include_zero.html');
+    browser.get('include_zero.html');
   });
 
   it('should generate a chart', function() {

@@ -2,7 +2,7 @@
 
 describe('Click events', function() {
   beforeEach(function() {
-    browser.get('test/e2e/click.html');
+    browser.get('click.html');
 
     // TODO : find a way to factorize this
     browser.executeScript('return window.angular !== undefined').then(function(hasIt) {

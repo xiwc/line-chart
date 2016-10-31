@@ -2,7 +2,7 @@
 
 describe('Major minor ticks', function() {
   beforeEach(function() {
-    browser.get('test/e2e/major_minor_ticks.html');
+    browser.get('major_minor_ticks.html');
   });
 
   var checkTicks = function(axisSide, ticks, element) {

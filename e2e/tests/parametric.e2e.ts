@@ -2,7 +2,7 @@
 
 describe('Parametric data', function() {
   beforeEach(function() {
-    browser.get('test/e2e/parametric.html');
+    browser.get('parametric.html');
   });
 
   it('should generate a chart', function() {

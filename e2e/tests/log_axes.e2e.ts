@@ -2,7 +2,7 @@
 
 describe('Logarithmic axes', function() {
   beforeEach(function() {
-    browser.get('test/e2e/log_axes.html');
+    browser.get('log_axes.html');
   });
 
   it('should generate a chart', function() {

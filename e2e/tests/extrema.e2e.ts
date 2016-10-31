@@ -2,7 +2,7 @@
 
 describe('n3Charts.Factory.Axis extrema', function() {
   beforeEach(function() {
-    browser.get('test/e2e/extrema.html');
+    browser.get('extrema.html');
   });
 
   it('should generate a chart', function() {

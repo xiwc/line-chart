@@ -2,7 +2,7 @@
 
 describe('Two axes', function() {
   beforeEach(function() {
-    browser.get('test/e2e/two_axes.html');
+    browser.get('two_axes.html');
   });
 
   var checkTicks = function(axisSide, expected, element) {

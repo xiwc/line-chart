@@ -2,7 +2,7 @@
 
 describe('Data interruption', function() {
   beforeEach(function() {
-    browser.get('test/e2e/data_interruption.html');
+    browser.get('data_interruption.html');
   });
 
   it('should generate a chart', function() {
