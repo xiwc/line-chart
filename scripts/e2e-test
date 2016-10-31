@@ -1,0 +1,3 @@
+#! /usr/bin/env bash
+
+tsc --outDir .tmp/e2e-tests e2e/tests/area.e2e.ts

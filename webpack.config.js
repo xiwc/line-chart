@@ -6,8 +6,8 @@ module.exports = {
     "react" : "./.tmp/react/LineChart.js"
   },
   output: {
-    path: "./build/",
-    filename: "[name].js",
+    path: "./.tmp/build/",
+    filename: "LineChart-[name].js",
     chunkFilename: "[name].js"
   },
   target: 'web',
@@ -20,5 +20,8 @@ module.exports = {
   module: {
     loaders: [
     ]
+  },
+  externals: {
+    "angular": "angular"
   }
 }

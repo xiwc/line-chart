@@ -1,0 +1,43 @@
+#!/usr/bin/env node
+
+const fs = require('fs');
+const mkdirp = require('mkdirp');
+const path = require('path');
+const _ = require('lodash');
+const glob = require("glob")
+const hjson = require('hjson');
+const express = require('express');
+const serveStatic = require('serve-static');
+
+var app;
+
+const writeFile = (filePath, contents, cb) => {
+  mkdirp(path.dirname(filePath), (err) => {
+    if (err) return cb(err);
+    fs.writeFile(filePath, contents, cb);
+  });
+};
+
+const generateHTML = () => {
+  const template = _.template(String(fs.readFileSync('e2e/templates/angularjs/single.html')));
+
+  glob('e2e/test_cases/*.hjson', (er, files) => {
+    files.forEach(file => {
+      const name = path.basename(file, path.extname(file));
+      var data = hjson.parse(fs.readFileSync(file, 'utf8'));
+
+      writeFile('.tmp/test/e2e/' + name + '.html', template({data, name}));
+    });
+  });
+};
+
+const serve = () => {
+  app = express()
+
+  app.use(serveStatic('.tmp'));
+  app.use(serveStatic('node_modules'));
+  app.listen(1234);
+};
+
+generateHTML();
+serve();

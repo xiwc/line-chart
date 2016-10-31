@@ -6,7 +6,7 @@ import * as Factory from '../factories/_index';
 import * as Series from '../factories/series/_index';
 import * as Symbols from '../factories/symbols/_index';
 import * as Options from '../options/_index';
-import * as SyncLayer from './SyncLayer';
+import { AngularJSSyncLayer as SyncLayer } from './SyncLayer';
 
 /// <reference path='./SyncLayer.ts' />
 

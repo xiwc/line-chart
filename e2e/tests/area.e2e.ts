@@ -1,4 +1,3 @@
-/// <reference path='../test.e2e.ts' />
 
 describe('n3Charts.Factory.Series.Area', function() {
   beforeEach(function() {

@@ -1,0 +1,14 @@
+#! /usr/bin/env bash
+
+tsc
+
+FILES=`ls .tmp`
+
+# Insert sass here
+
+webpack > /dev/null
+
+# For backward comp
+mv .tmp/build/LineChart-angularjs.js .tmp/build/LineChart.js
+
+(cd .tmp && rm -rf ${FILES})
