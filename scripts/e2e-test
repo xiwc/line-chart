@@ -1,30 +1,57 @@
 #! /usr/bin/env node
 
+const exec = require('child_process').exec;
+const generateDemo = require('./demo');
 const fs = require('fs');
-const writeFile = require('./writeFile');
 const glob = require('glob');
 const path = require('path');
-const tsc = require('typescript');
+const Q = require('q');
 const serve = require('./serve');
+const tsc = require('typescript');
+const writeFile = require('./writeFile');
 
 const tscOptions = {};
 
 const transpile = () => {
-  glob('e2e/tests/area.e2e.ts', (er, files) => {
+  const deferred = Q.defer();
+  var jsFiles = [];
+
+  glob('e2e/tests/**/*.e2e.ts', (er, files) => {
     files.forEach(file => {
       const name = path.basename(file, path.extname(file));
       const data = String(fs.readFileSync(file, 'utf8'));
       const { outputText } = tsc.transpileModule(data, tscOptions);
 
+      jsFiles.push('.tmp/test/e2e/' + name + '.js');
       writeFile('.tmp/test/e2e/' + name + '.js', outputText);
     });
+
+    deferred.resolve(jsFiles);
   });
+
+  return deferred.promise;
 };
 
-transpile();
-serve();
+const runTests = ([jsFiles, demoFiles]) => {
+  const deferred = Q.defer();
 
+  if (!jsFiles || !jsFiles.length) {
+    throw new Error('No test files found');
+  }
 
-// tsc --outDir .tmp/test/e2e e2e/tests/area.e2e.ts
+  let child = exec('protractor --specs ' + jsFiles.join(',') + ' config/protractor.conf.js');
 
+  child.stdout.pipe(process.stdout);
+  child.stderr.pipe(process.stderr);
+  child.on('exit', deferred.resolve);
 
+  return deferred.promise;
+};
+
+var transpilation = transpile();
+var demoStuff = generateDemo().then(serve);
+
+Q.all([transpilation, demoStuff])
+  .then(runTests)
+  .then(process.exit)
+  .done();

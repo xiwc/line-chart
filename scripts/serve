@@ -2,15 +2,21 @@
 
 const express = require('express');
 const serveStatic = require('serve-static');
+const Q = require('q');
 
 const serve = () => {
+  const deferred = Q.defer();
+
   const app = express()
 
   app.use(serveStatic('.tmp'));
   app.use(serveStatic('node_modules'));
   app.listen(1234, () => {
     console.log('Listening on port 1234...');
+    deferred.resolve();
   });
+
+  return deferred.promise;
 };
 
 if (require.main === module) {

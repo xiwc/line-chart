@@ -4,11 +4,14 @@ tsc
 
 FILES=`ls src`
 
-# Insert sass here
+./scripts/sass
 
 webpack > /dev/null
 
 # For backward comp
 mv .tmp/build/LineChart-angularjs.js .tmp/build/LineChart.js
+
+uglifyjs .tmp/build/LineChart.js > .tmp/build/LineChart.min.js
+uglifyjs .tmp/build/LineChart-react.js > .tmp/build/LineChart-react.min.js
 
 (cd .tmp && rm -rf ${FILES})
