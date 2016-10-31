@@ -32,12 +32,10 @@ const transpile = () => {
   return deferred.promise;
 };
 
-const runTests = ([jsFiles, demoFiles]) => {
+const runTests = ([jsFiles, serveResult]) => {
   const deferred = Q.defer();
 
-  if (!jsFiles || !jsFiles.length) {
-    throw new Error('No test files found');
-  }
+  if (!jsFiles || !jsFiles.length) throw new Error('No test files found');
 
   let child = exec('protractor --specs ' + jsFiles.join(',') + ' config/protractor.conf.js');
 

@@ -6,7 +6,7 @@ FILES=`ls src`
 
 ./scripts/sass
 
-webpack > /dev/null
+webpack --display-error-details
 
 # For backward comp
 mv .tmp/build/LineChart-angularjs.js .tmp/build/LineChart.js

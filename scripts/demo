@@ -9,9 +9,9 @@ const path = require('path');
 const serve = require('./serve');
 const writeFile = require('./writeFile');
 
-const generateHTML = () => {
+const generateHTML = function() {
   const deferred = Q.defer();
-  const template = _.template(String(fs.readFileSync('e2e/templates/angularjs/single.html')));
+  const template = _.template(String(fs.readFileSync('e2e/templates/react/single.html')));
 
   glob('e2e/test_cases/*.hjson', (er, files) => {
     files.forEach(file => {

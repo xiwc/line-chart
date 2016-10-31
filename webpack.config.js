@@ -22,6 +22,8 @@ module.exports = {
     ]
   },
   externals: {
-    "angular": "angular"
+    "angular": "angular",
+    "react": 'React',
+    "react-dom": 'ReactDOM'
   }
 }

@@ -7,9 +7,9 @@ import * as Factory from '../factories/_index';
 import * as Series from '../factories/series/_index';
 import * as Symbols from '../factories/symbols/_index';
 import * as Options from '../options/_index';
-import * as ReactSyncLayer from './SyncLayer';
+import { ReactSyncLayer as SyncLayer } from './SyncLayer';
 
-var LineChart = React.createClass({
+window['LineChart'] = React.createClass({
   propTypes: {
     data: React.PropTypes.object,
     options: React.PropTypes.object,
@@ -70,7 +70,7 @@ var LineChart = React.createClass({
       ['grid', Factory.Grid],
       ['pan', Factory.Pan],
       ['zoom', Factory.Zoom],
-      ['sync-layer', ReactSyncLayer, this.props],
+      ['sync-layer', SyncLayer, this.props],
 
       // This order is important, otherwise it can mess up with the tooltip
       // (and you don't want to mess up with a tooltip, trust me).
