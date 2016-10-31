@@ -43,7 +43,7 @@ export class Axis extends Factory.BaseFactory {
   }
 
   create() {
-    var vis: d3.Selection<any> = this.factoryMgr.get('container').axes;
+    var vis: d3.Selection<any, any, any, any> = this.factoryMgr.get('container').axes;
 
     this.createAxis(vis);
 

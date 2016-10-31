@@ -116,10 +116,10 @@ export class LineChart implements ng.IDirective  {
     });
 
     eventMgr.on('pan.directive', () => {
-      (<d3.Selection<SVGElement>>factoryMgr.get('container').svg).classed('panning', true);
+      (<d3.Selection<SVGElement, any, any, any>>factoryMgr.get('container').svg).classed('panning', true);
     });
     eventMgr.on('pan-end.directive', () => {
-      (<d3.Selection<SVGElement>>factoryMgr.get('container').svg).classed('panning', false);
+      (<d3.Selection<SVGElement, any, any, any>>factoryMgr.get('container').svg).classed('panning', false);
     });
 
     var getDimensions = function(): any {
