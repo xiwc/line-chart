@@ -2,7 +2,7 @@
 
 tsc
 
-FILES=`ls .tmp`
+FILES=`ls src`
 
 # Insert sass here
 

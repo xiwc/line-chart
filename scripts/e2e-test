@@ -1,3 +1,30 @@
-#! /usr/bin/env bash
+#! /usr/bin/env node
 
-tsc --outDir .tmp/e2e-tests e2e/tests/area.e2e.ts
+const fs = require('fs');
+const writeFile = require('./writeFile');
+const glob = require('glob');
+const path = require('path');
+const tsc = require('typescript');
+const serve = require('./serve');
+
+const tscOptions = {};
+
+const transpile = () => {
+  glob('e2e/tests/area.e2e.ts', (er, files) => {
+    files.forEach(file => {
+      const name = path.basename(file, path.extname(file));
+      const data = String(fs.readFileSync(file, 'utf8'));
+      const { outputText } = tsc.transpileModule(data, tscOptions);
+
+      writeFile('.tmp/test/e2e/' + name + '.js', outputText);
+    });
+  });
+};
+
+transpile();
+serve();
+
+
+// tsc --outDir .tmp/test/e2e e2e/tests/area.e2e.ts
+
+

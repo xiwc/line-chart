@@ -1,22 +1,14 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const mkdirp = require('mkdirp');
-const path = require('path');
 const _ = require('lodash');
-const glob = require("glob")
+const exec = require('child_process').exec;
+const fs = require('fs');
+const glob = require('glob');
 const hjson = require('hjson');
-const express = require('express');
-const serveStatic = require('serve-static');
-
-var app;
-
-const writeFile = (filePath, contents, cb) => {
-  mkdirp(path.dirname(filePath), (err) => {
-    if (err) return cb(err);
-    fs.writeFile(filePath, contents, cb);
-  });
-};
+const path = require('path');
+const Q = require('q');
+const serve = require('./serve');
+const writeFile = require('./writeFile');
 
 const generateHTML = () => {
   const template = _.template(String(fs.readFileSync('e2e/templates/angularjs/single.html')));
@@ -31,13 +23,22 @@ const generateHTML = () => {
   });
 };
 
-const serve = () => {
-  app = express()
+const runTests = () => {
+  const deferred = Q.defer();
 
-  app.use(serveStatic('.tmp'));
-  app.use(serveStatic('node_modules'));
-  app.listen(1234);
+  glob('.tmp/test/e2e/*.e2e.js', (er, files) => {
+    let child = exec('protractor --specs ' + files.join(',') + ' config/protractor.conf.js');
+
+    child.stdout.pipe(process.stdout);
+    child.stderr.pipe(process.stderr);
+    child.on('exit', deferred.resolve);
+  });
+
+
+  return deferred.promise;
 };
+
 
 generateHTML();
 serve();
+runTests().then(process.exit);
