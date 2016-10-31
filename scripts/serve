@@ -34,7 +34,7 @@ const serve = function(project) {
 };
 
 if (require.main === module) {
-  serve(process.argv[2]);
+  serve(process.argv[2]).start();
 } else {
   module.exports = serve;
 }

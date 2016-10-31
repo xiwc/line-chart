@@ -12,15 +12,23 @@ const generateHTML = function(project) {
   if (['angularjs', 'react'].indexOf(project) === -1) throw new Error('Unsupported project : ' + project);
 
   const deferred = Q.defer();
-  const template = _.template(String(fs.readFileSync('e2e/templates/' + project + '/single.html')));
+  const singleTemplate = _.template(String(fs.readFileSync('e2e/templates/' + project + '/single.html')));
+  const allTemplate = _.template(String(fs.readFileSync('e2e/templates/' + project + '/all.html')));
+  let examples = [];
 
   glob('e2e/test_cases/*.hjson', (er, files) => {
-    files.forEach(file => {
-      const name = path.basename(file, path.extname(file));
-      var data = hjson.parse(fs.readFileSync(file, 'utf8'));
 
-      writeFile('.tmp/test/e2e/' + project + '/' + name + '.html', template({data, name}));
+    files.forEach(file => {
+      let example = {
+        data: hjson.parse(fs.readFileSync(file, 'utf8')),
+        name: path.basename(file, path.extname(file))
+      };
+
+      writeFile('.tmp/test/e2e/' + project + '/' + example.name + '.html', singleTemplate(example));
+      examples.push(example);
     });
+
+    writeFile('.tmp/test/e2e/' + project + '/index.html', allTemplate({examples}));
 
     deferred.resolve();
   });

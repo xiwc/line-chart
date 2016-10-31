@@ -41,7 +41,7 @@
   }
 
   <% _.each(examples, function(example) { %>
-    .<%=example.data.name%> <%=example.data.style || '{}'%>
+    .<%=example.name%> <%=example.data.style || '{}'%>
   <% }); %>
 
   </style>
@@ -51,9 +51,9 @@
   <div class="examples">
     <% _.each(examples, function(example) { %>
 
-    <div class="example <%=example.data.name%>" ng-controller="<%=example.data.name%>Ctrl">
+    <div class="example <%=example.name%>" ng-controller="<%=example.name%>Ctrl">
       <div class="example-title">
-        <a id="<%=example.data.name%>" href="/test/e2e/<%=example.data.name%>.html"><%=example.data.name%></a>
+        <a id="<%=example.name%>" href="/test/e2e/<%=example.name%>.html"><%=example.name%></a>
       </div>
       <%=example.data.angular.html%>
     </div>
@@ -70,7 +70,7 @@
   angular.module('example', ['n3-line-chart'])
 
   <% _.each(examples, function(example) { %>
-    .controller('<%=example.data.name%>Ctrl', function(data, options) {
+    .controller('<%=example.name%>Ctrl', function(data, options) {
       return <%=example.data.angular.js%>;
     }(<%=example.data.data%>, <%=example.data.options%>))
   <% }); %>

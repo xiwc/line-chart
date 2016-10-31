@@ -17,7 +17,7 @@
   "scripts": {
     "compile": "./scripts/compile",
     "test": "npm run tests",
-    "tests": "npm run compile && ./scripts/unit-test && ./scripts/e2e-test angularjs && ./scripts/e2e-test react"
+    "tests": "npm run compile && ./scripts/unit-test && ./scripts/e2e-test"
   },
   "dependencies": {
     "@types/angular": "^1.5.16",

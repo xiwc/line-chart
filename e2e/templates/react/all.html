@@ -41,7 +41,7 @@
   }
 
   <% _.each(examples, function(example) { %>
-    .<%=example.data.name%> <%=example.data.style || '{}'%>
+    .<%=example.name%> <%=example.data.style || '{}'%>
   <% }); %>
 
   </style>
@@ -51,9 +51,9 @@
   <div class="examples">
     <% _.each(examples, function(example) { %>
 
-    <div class="example <%=example.data.name%>">
+    <div class="example <%=example.name%>">
       <div class="example-title">
-        <a id="<%=example.data.name%>" href="/test/e2e/<%=example.data.name%>.html"><%=example.data.name%></a>
+        <a id="<%=example.name%>" href="/test/e2e/<%=example.name%>.html"><%=example.name%></a>
       </div>
       <%=example.data.react.html%>
     </div>
