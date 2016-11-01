@@ -32,7 +32,7 @@ describe('EventManager', () => {
       var e = eventMgr.init(['test']);
 
       expect(() => e.on('test', () => 'test')).not.to.throw();
-      expect(() => e.on('other-test', () => 'test')).to.throw(TypeError);
+      expect(() => e.on('other-test', () => 'test')).to.throw();
     });
 
     it('should return the instance', () => {
@@ -117,7 +117,7 @@ describe('EventManager', () => {
       var e = eventMgr.init(['test']);
 
       expect(() => e.trigger('test')).not.to.throw();
-      expect(() => e.trigger('other-test')).to.throw(TypeError);
+      expect(() => e.trigger('other-test')).to.throw();
     });
 
     it('should return the instance', () => {
