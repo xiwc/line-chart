@@ -14,43 +14,44 @@ export class Dot extends Series.SeriesFactory {
     var dotsData = this.data.getDatasetValues(series, this.options).filter(series.defined);
     var dotsRadius = 2;
 
-    var dots = group.selectAll('.' + this.type)
-      .data(dotsData, (d: Utils.IPoint) => '' + d.x);
-
-    var initPoint = (s) => {
-      s.attr({
-        r: (d) => dotsRadius,
-        cx: (d) => xAxis.scale(d.x),
-        cy: (d) => yAxis.range()[0]
-      });
+    var initPoint = (_dots) => {
+      _dots
+        .attr('r', (d) => dotsRadius)
+        .attr('cx', (d) => xAxis.scale(d.x))
+        .attr('cy', (d) => yAxis.range()[0])
+      ;
     };
 
-    var updatePoint = (s) => {
-      s.attr({
-        r: (d) => dotsRadius,
-        cx: (d) => xAxis.scale(d.x),
-        cy: (d) => yAxis.scale(d.y1)
-      })
+    var updatePoint = (_dots) => {
+      _dots
+        .attr('r', (d) => dotsRadius)
+        .attr('cx', (d) => xAxis.scale(d.x))
+        .attr('cy', (d) => yAxis.scale(d.y1))
       .style('opacity', series.visible ? 1 : 0);
     };
 
-    if (this.factoryMgr.get('transitions').isOn()) {
-      dots.enter()
-        .append('circle')
-        .attr('class', this.type)
-        .call(this.eventMgr.datumEnter(series, this.options))
-        .call(this.eventMgr.datumOver(series, this.options))
-        .call(this.eventMgr.datumMove(series, this.options))
-        .call(this.eventMgr.datumLeave(series, this.options))
-        .call(initPoint)
-        .transition()
-        .call(this.factoryMgr.getBoundFunction('transitions', 'enter'))
-        .call(updatePoint);
+    var dots = group.selectAll('.' + this.type)
+      .data(dotsData, (d: Utils.IPoint) => '' + d.x);
 
+    if (this.factoryMgr.get('transitions').isOn()) {
       dots
         .transition()
         .call(this.factoryMgr.getBoundFunction('transitions', 'edit'))
         .call(updatePoint);
+
+      dots.enter()
+        .append('circle')
+          .attr('class', this.type)
+          .call(this.eventMgr.datumEnter(series, this.options))
+          .call(this.eventMgr.datumOver(series, this.options))
+          .call(this.eventMgr.datumMove(series, this.options))
+          .call(this.eventMgr.datumLeave(series, this.options))
+          .call(initPoint)
+        .merge(dots)
+          .transition()
+          .call(this.factoryMgr.getBoundFunction('transitions', 'enter'))
+          .call(updatePoint);
+
 
       dots.exit()
         .transition()

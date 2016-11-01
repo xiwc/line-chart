@@ -76,8 +76,6 @@ export class Area extends SeriesFactory {
   }
 
   styleSeries(group: d3.Selection<any, Options.SeriesOptions, any, any>) {
-    console.log(group);
-
     group
       .style('fill', (s) => s.color)
       .style('stroke', (s) => s.color)

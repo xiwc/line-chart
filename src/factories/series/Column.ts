@@ -65,22 +65,21 @@ export class Column extends Series.SeriesFactory {
 
     var xFn = (d) => xAxis.scale(d.x) + this.innerXScale(series.id);
 
-    var initCol = (s) => {
-      s.attr({
-        x: xFn,
-        y: (d) => yAxis.scale(d.y0),
-        width: this.innerXScale.step(),
-        height: 0
-      });
+    var initCol = (_columns) => {
+      _columns
+        .attr('x', xFn)
+        .attr('y', (d) => yAxis.scale(d.y0))
+        .attr('width', this.innerXScale.step())
+        .attr('height', 0)
+      ;
     };
 
-    var updateCol = (s) => {
-      s.attr({
-        x: xFn,
-        y: (d) => d.y1 > 0 ? yAxis.scale(d.y1) : yAxis.scale(d.y0),
-        width: this.innerXScale.step(),
-        height: (d) => Math.abs(yAxis.scale(d.y0) - yAxis.scale(d.y1))
-      })
+    var updateCol = (_columns) => {
+      _columns
+        .attr('x', xFn)
+        .attr('y', (d) => d.y1 > 0 ? yAxis.scale(d.y1) : yAxis.scale(d.y0))
+        .attr('width', this.innerXScale.step())
+        .attr('height', (d) => Math.abs(yAxis.scale(d.y0) - yAxis.scale(d.y1)))
       .style('opacity', series.visible ? 1 : 0);
     };
 

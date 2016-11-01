@@ -33,19 +33,26 @@ export class Line extends Series.SeriesFactory {
       .data([lineData]);
 
     if (this.factoryMgr.get('transitions').isOn()) {
-      line.enter()
-        .append('path')
-        .attr('class', this.type)
-        .attr('d', (d) => initLine(d))
-        .transition()
-        .call(this.factoryMgr.getBoundFunction('transitions', 'enter'))
-        .attr('d', (d) => updateLine(d));
+      const init = (_line) => {
+        _line
+          .attr('class', this.type)
+          .attr('d', (d) => initLine(d));
+      };
 
-      line
-        .transition()
-        .call(this.factoryMgr.getBoundFunction('transitions', 'edit'))
-        .attr('d', (d) => updateLine(d))
-        .style('opacity', series.visible ? 1 : 0);
+      const update = (_line) => {
+        _line
+          .transition()
+          .call(this.factoryMgr.getBoundFunction('transitions', 'enter'))
+          .attr('d', (d) => updateLine(d));
+      };
+
+      line.call(update);
+
+      line.enter()
+          .append('path')
+          .call(init)
+        .merge(line)
+          .call(update);
 
       line.exit()
         .transition()

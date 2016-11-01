@@ -75,11 +75,11 @@ window['LineChart'] = React.createClass({
       // This order is important, otherwise it can mess up with the tooltip
       // (and you don't want to mess up with a tooltip, trust me).
       ['series-area', Series.Area],
-      // ['series-column', Series.Column],
-      // ['series-line', Series.Line],
-      // ['series-dot', Series.Dot],
-      // ['symbols-hline', Symbols.HLine],
-      // ['symbols-vline', Symbols.VLine]
+      ['series-column', Series.Column],
+      ['series-line', Series.Line],
+      ['series-dot', Series.Dot],
+      ['symbols-hline', Symbols.HLine],
+      ['symbols-vline', Symbols.VLine]
     ]);
 
     this.factoryMgr.all().forEach((f) => f.instance.init(f.key, this.eventMgr, this.factoryMgr));
