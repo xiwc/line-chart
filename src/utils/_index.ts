@@ -5,3 +5,4 @@ export * from './Dataset';
 export * from './Data';
 export * from './FunctionUtils';
 export * from './ObjectUtils';
+export * from './Interpolation';

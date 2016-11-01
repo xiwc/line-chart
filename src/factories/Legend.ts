@@ -8,7 +8,7 @@ import { Container } from './Container';
 
 export class Legend extends BaseFactory {
 
-  private div: d3.Selection<any>;
+  private div: d3.Selection<any, any, any, any>;
 
   constructor(private element: HTMLElement) {
     super();
@@ -25,8 +25,8 @@ export class Legend extends BaseFactory {
         .style('position', 'absolute');
   }
 
-  legendClick() {
-    return (selection: d3.Selection<SeriesOptions>) => {
+  legendClick(): any {
+    return (selection: d3.Selection<any, SeriesOptions, any, any>) => {
       return selection.on('click', (series) => {
         this.eventMgr.trigger('legend-click', series);
       });
@@ -34,31 +34,36 @@ export class Legend extends BaseFactory {
   }
 
   update(data: Utils.Data, options: Options) {
-    var container = <Container> this.factoryMgr.get('container');
-    var dim: Dimensions = container.getDimensions();
-
-    var init = (series) => {
-      var items = series.append('div').attr({'class': 'item'})
-        .call(this.legendClick());
-
-      items.append('div').attr({'class': 'icon'});
-      items.append('div').attr({'class': 'legend-label'});
+    const init = (_items) => {
+      _items.attr('class', 'item');
+      _items.call(this.legendClick());
+      _items.append('div').attr('class', 'icon');
+      _items.append('div').attr('class', 'legend-label');
     };
 
-    var update = (series) => {
-      series
+    const update = (_items) => {
+      _items
         .attr('class', (d: SeriesOptions) => 'item ' + d.type.join(' '))
         .classed('legend-hidden', (d) => !d.visible);
-      series.select('.icon').style('background-color', (d) => d.color);
-      series.select('.legend-label').text((d) => d.label);
+      _items.select('.icon').style('background-color', (d) => d.color);
+      _items.select('.legend-label').text((d) => d.label);
     };
 
-    var legendItems = this.div.selectAll('.item')
+    var items = this.div.selectAll('.item')
       .data(options.series);
 
-    legendItems.enter().call(init);
-    legendItems.call(update);
-    legendItems.exit().remove();
+    // update
+    items.call(update);
+
+    // enter (and update, wtf is going on)
+    items.enter()
+        .append('div')
+        .call(init)
+      .merge(items)
+        .call(update);
+
+    // exit
+    items.exit().remove();
   }
 
   destroy() {

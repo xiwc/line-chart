@@ -6,13 +6,13 @@ import * as Options from '../../options/_index';
 
 export class HLine extends Factory.BaseFactory {
 
-  public svg: d3.Selection<any>;
+  public svg: d3.Selection<any, any, any, any>;
   private options: Options.Options;
 
   create() {
     this.svg = (<Factory.Container>this.factoryMgr.get('container')).symbols
       .append('g')
-        .attr({'class': 'hlines'});
+        .attr('class', 'hlines');
 
     this.eventMgr.on('resize.' + this.key, this.softUpdate.bind(this));
     this.eventMgr.on('pan.' + this.key, this.softUpdate.bind(this));
@@ -28,26 +28,24 @@ export class HLine extends Factory.BaseFactory {
     };
 
     var hline = this.svg.selectAll('.hline')
-      .data(this.options.getSymbolsByType(Options.SymbolOptions.TYPE.HLINE), o => o.id);
+      .data(this.options.getSymbolsByType(Options.SymbolOptions.TYPE.HLINE), (o: Options.SymbolOptions) => o.id);
 
-    var init = (selection: d3.Selection<Options.SymbolOptions> | d3.Transition<Options.SymbolOptions>) => {
+    var init = (selection: d3.Selection<any, Options.SymbolOptions, any, any> | d3.Transition<any, Options.SymbolOptions, any, any>) => {
       selection
         .attr('class', 'hline')
-        .style({
-          'opacity': 0,
-          'stroke': o => o.color
-        });
+        .style('opacity', 0)
+        .style('stroke', o => o.color)
+      ;
     };
 
-    var update = (selection: d3.Selection<Options.SymbolOptions> | d3.Transition<Options.SymbolOptions>) => {
-      selection.attr({
-        'x1': xAxis.scale(xAxis.getDomain()[0]),
-        'x2': xAxis.scale(xAxis.getDomain()[1]),
-        'y1': o => yAxes[o.axis].scale(o.value),
-        'y2': o => yAxes[o.axis].scale(o.value)
-      }).style({
-        'opacity': 1
-      });
+    var update = (selection: d3.Selection<any, Options.SymbolOptions, any, any> | d3.Transition<any, Options.SymbolOptions, any, any>) => {
+      selection
+        .attr('x1', xAxis.scale(xAxis.getDomain()[0]))
+        .attr('x2', xAxis.scale(xAxis.getDomain()[1]))
+        .attr('y1', o => yAxes[o.axis].scale(o.value))
+        .attr('y2', o => yAxes[o.axis].scale(o.value))
+        .style('opacity', 1)
+      ;
     };
 
     if (this.factoryMgr.get('transitions').isOn()) {
@@ -67,7 +65,7 @@ export class HLine extends Factory.BaseFactory {
         .transition()
         .call(this.factoryMgr.getBoundFunction('transitions', 'exit'))
         .style('opacity', 0)
-        .each('end', function() {
+        .on('end', function() {
           d3.select(this).remove();
         });
     } else {

@@ -13,15 +13,15 @@ export interface ICoordinates {
 
 export class Container extends BaseFactory {
 
-  public defs: d3.Selection<any>;
+  public defs: d3.Selection<any, any, any, any>;
 
-  public svg: d3.Selection<any>;
-  public vis: d3.Selection<any>;
+  public svg: d3.Selection<any, any, any, any>;
+  public vis: d3.Selection<any, any, any, any>;
 
-  public data: d3.Selection<any>;
-  public overlay: d3.Selection<any>;
-  public symbols: d3.Selection<any>;
-  public axes: d3.Selection<any>;
+  public data: d3.Selection<any, any, any, any>;
+  public overlay: d3.Selection<any, any, any, any>;
+  public symbols: d3.Selection<any, any, any, any>;
+  public axes: d3.Selection<any, any, any, any>;
 
   public dim: Options.Dimensions = new Options.Dimensions();
 
@@ -130,10 +130,9 @@ export class Container extends BaseFactory {
 
     this.data = this.vis
       .append('g')
-        .attr({
-          'class': 'data',
-          'clip-path': 'url(#' + this.clippingPathId + ')'
-        });
+        .attr('class', 'data')
+        .attr('clip-path', 'url(#' + this.clippingPathId + ')')
+        ;
 
     this.overlay = this.vis
       .append('g')
@@ -141,25 +140,22 @@ export class Container extends BaseFactory {
 
     this.symbols = this.overlay
       .append('g')
-        .attr({
-          'class': 'symbols',
-          'clip-path': 'url(#' + this.clippingPathId + ')'
-        });
+      .attr('class', 'symbols')
+      .attr('clip-path', 'url(#' + this.clippingPathId + ')')
+      ;
   }
 
   updateContainer() {
     this.vis
-      .attr({
-        'width': this.dim.innerWidth,
-        'height': Math.max(this.dim.innerHeight, 0),
-        'transform': 'translate(' + this.dim.margin.left + ', ' + this.dim.margin.top + ')'
-      });
+      .attr('width', this.dim.innerWidth)
+      .attr('height', Math.max(this.dim.innerHeight, 0))
+      .attr('transform', 'translate(' + this.dim.margin.left + ', ' + this.dim.margin.top + ')')
+      ;
 
     d3.select(this.element).select('#clipping-rect')
-      .attr({
-        'width': Math.max(this.dim.innerWidth, 0),
-        'height': Math.max(this.dim.innerHeight, 0)
-      });
+      .attr('width', Math.max(this.dim.innerWidth, 0))
+      .attr('height', Math.max(this.dim.innerHeight, 0))
+      ;
   }
 
   getDimensions(): Options.Dimensions {

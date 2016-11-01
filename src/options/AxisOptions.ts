@@ -9,7 +9,7 @@ export class AxisOptions {
   public min: any;
   public max: any;
   public tickFormat: (value: any, index?: number) => string;
-  public ticks: any;
+  public ticks: number | number[];
   public padding = {min: 0, max: 0};
   public ticksShift: any = {
     x: 0,
@@ -61,18 +61,12 @@ export class AxisOptions {
     return d3.values(AxisOptions.SIDE).indexOf(side) !== -1;
   }
 
-  hasDynamicTicks() {
-    return this.ticks instanceof Function;
-  }
-
-  configure(axis: d3.svg.Axis): d3.svg.Axis {
+  configure(axis: d3.Axis<number>): d3.Axis<number> {
     axis.tickFormat(this.tickFormat);
 
     if (this.ticks instanceof Array) {
       axis.tickValues(this.ticks);
     } else if (typeof this.ticks === 'number') {
-      axis.ticks(this.ticks);
-    } else if (this.ticks instanceof Function) {
       axis.ticks(this.ticks);
     }
 

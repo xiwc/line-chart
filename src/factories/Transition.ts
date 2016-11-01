@@ -3,9 +3,9 @@ import * as d3 from 'd3';
 import { BaseFactory } from './BaseFactory';
 
 export class Transition extends BaseFactory {
-  static defaultDuration: number = 250;
-  private duration: number = Transition.defaultDuration;
-  private ease: string = 'cubic';
+  static defaultDuration = 250;
+  private duration = Transition.defaultDuration;
+  private ease = d3.easeCubicInOut;
 
   off() {
     super.off();
@@ -17,10 +17,10 @@ export class Transition extends BaseFactory {
     this.duration = Transition.defaultDuration;
   }
 
-  enter(t: d3.Transition<any>) {
+  enter(t: d3.Transition<any, any, any, any>) {
     var duration = this.duration;
     var ease = this.ease;
-    var n = t[0].length;
+    var n = (t as any)._groups[0].length;
     var delay = (d, i) => n ? i / n * duration : 0;
 
     t.duration(duration)
@@ -28,7 +28,7 @@ export class Transition extends BaseFactory {
       .ease(ease);
   }
 
-  edit(t: d3.Transition<any>) {
+  edit(t: d3.Transition<any, any, any, any>) {
     var duration = this.duration;
     var ease = this.ease;
     var delay = 0;
@@ -38,7 +38,7 @@ export class Transition extends BaseFactory {
       .ease(ease);
   }
 
-  exit(t: d3.Transition<any>) {
+  exit(t: d3.Transition<any, any, any, any>) {
     var duration = this.duration;
     var ease = this.ease;
     var delay = 0;

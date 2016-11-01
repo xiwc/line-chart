@@ -13,9 +13,9 @@ export interface INeighbour {
 
 export class Tooltip extends BaseFactory {
 
-  private svg: d3.Selection<any>;
-  private line: d3.Selection<any>;
-  private dots: d3.Selection<any>;
+  private svg: d3.Selection<any, any, any, any>;
+  private line: d3.Selection<any, any, any, any>;
+  private dots: d3.Selection<any, any, any, any>;
 
   private options: Options.Options;
 
@@ -206,43 +206,39 @@ export class Tooltip extends BaseFactory {
     this.svg.select('.abscissas')
       .text(result.abscissas);
 
-    var initItem = (s) => {
-      s.attr({'class': 'tooltip-item'});
+    var init = (_items) => {
+      _items.attr('class', 'tooltip-item');
 
-      s.append('div')
-        .attr({'class': 'color-dot'})
-        .style({
-          'background-color': (d) => d.color
-        });
+      _items.append('div')
+        .attr('class', 'color-dot')
+        .style('background-color', (d) => d.color);
 
-      s.append('div')
-        .attr({'class': 'series-label'});
+      _items.append('div')
+        .attr('class', 'series-label');
 
-      s.append('div')
-        .attr({'class': 'y-value'});
-
-      return s;
+      _items.append('div')
+        .attr('class', 'y-value');
     };
 
-    var updateItem = (s) => {
-      s.select('.series-label')
+    var update = (_items) => {
+      _items.select('.series-label')
         .text((d) => d.label);
 
-      s.select('.y-value')
+      _items.select('.y-value')
         .text((d) => d.value);
-
-      return s;
     };
 
     var items = this.svg.selectAll('.tooltip-item')
       .data(result.rows, (d: any , i) => !!d.id ? d.id : i );
 
-    items.enter()
-      .append('div')
-      .call(initItem)
-      .call(updateItem);
+    items.call(update);
 
-    items.call(updateItem);
+    items.enter()
+        .append('div')
+        .call(init)
+      .merge(items)
+        .call(update);
+
     items.exit().remove();
   }
 
@@ -250,50 +246,52 @@ export class Tooltip extends BaseFactory {
     var xScale = this.factoryMgr.get('x-axis').scale;
     var yScale = (side) => this.factoryMgr.get(side + '-axis').scale;
 
-    var radius = 3;
-    var initDots = (s) => {
-      s.attr('class', 'tooltip-dots-group');
+    const radius = 3;
 
-      s.append('circle').attr({
-        'class': 'tooltip-dot y1'
-      }).on('click', (d: INeighbour, i) => {
-        this.eventMgr.trigger('click', d.row, i, d.series, this.options);
-      });
+    const init = (_dots) => {
+      _dots.attr('class', 'tooltip-dots-group');
 
-      s.append('circle').attr({
-        'class': 'tooltip-dot y0'
-      }).style({
-        'display': (d) => d.series.hasTwoKeys() ? null : 'none'
-      }).on('click', (d: INeighbour, i) => {
-        this.eventMgr.trigger('click', d.row, i, d.series, this.options);
-      });
+      _dots.append('circle')
+        .attr('class', 'tooltip-dot y1')
+        .on('click', (d: INeighbour, i) => {
+          this.eventMgr.trigger('click', d.row, i, d.series, this.options);
+        });
+
+      _dots.append('circle')
+        .attr('class', 'tooltip-dot y0')
+        .style('display', (d) => d.series.hasTwoKeys() ? null : 'none')
+        .on('click', (d: INeighbour, i) => {
+          this.eventMgr.trigger('click', d.row, i, d.series, this.options);
+        });
     };
 
-    var updateDots = (s) => {
-      s.select('.tooltip-dot.y1').attr({
-        'r': (d) => radius,
-        'cx': (d) => xScale(d.row.x),
-        'cy': (d) => yScale(d.series.axis)(d.row.y1),
-        'stroke': (d) => d.series.color
-      });
+    const update = (_dots) => {
+      _dots.select('.tooltip-dot.y1')
+        .attr('r', (d) => radius)
+        .attr('cx', (d) => xScale(d.row.x))
+        .attr('cy', (d) => yScale(d.series.axis)(d.row.y1))
+        .attr('stroke', (d) => d.series.color)
+      ;
 
-      s.select('.tooltip-dot.y0').attr({
-        'r': (d) => d.series.hasTwoKeys() ? radius : null,
-        'cx': (d) => d.series.hasTwoKeys() ? xScale(d.row.x) : null,
-        'cy': (d) => d.series.hasTwoKeys() ? yScale(d.series.axis)(d.row.y0) : null,
-        'stroke': (d) => d.series.hasTwoKeys() ? d.series.color : null
-      });
+      _dots.select('.tooltip-dot.y0')
+        .attr('r', (d) => d.series.hasTwoKeys() ? radius : null)
+        .attr('cx', (d) => d.series.hasTwoKeys() ? xScale(d.row.x) : null)
+        .attr('cy', (d) => d.series.hasTwoKeys() ? yScale(d.series.axis)(d.row.y0) : null)
+        .attr('stroke', (d) => d.series.hasTwoKeys() ? d.series.color : null)
+      ;
     };
 
     var dots = this.dots.selectAll('.tooltip-dots-group')
       .data(rows);
 
-    dots.enter()
-      .append('g')
-      .call(initDots)
-      .call(updateDots);
+    dots.call(update);
 
-    dots.call(updateDots);
+    dots.enter()
+        .append('g')
+        .call(init)
+      .merge(dots)
+        .call(update);
+
     dots.exit().remove();
   }
 
@@ -318,11 +316,10 @@ export class Tooltip extends BaseFactory {
     }
 
     this.svg
-      .style({
-        'left': (leftOffset + margin.left + xAxis.scale(lastRow.row.x) + xOffset) + 'px',
-        'top': (topOffset + margin.top) + 'px',
-        'transform': transform
-      });
+      .style('left', (leftOffset + margin.left + xAxis.scale(lastRow.row.x) + xOffset) + 'px')
+      .style('top', (topOffset + margin.top) + 'px')
+      .style('transform', transform)
+    ;
 
     return;
   }
@@ -337,12 +334,12 @@ export class Tooltip extends BaseFactory {
 
     var x = xAxis.scale(lastRow.row.x);
 
-    this.line.attr({
-      'x1': x,
-      'x2': x,
-      'y1': -dim.margin.top,
-      'y2': dim.innerHeight
-    });
+    this.line
+      .attr('x1', x)
+      .attr('x2', x)
+      .attr('y1', -dim.margin.top)
+      .attr('y2', dim.innerHeight)
+    ;
 
     return;
   }

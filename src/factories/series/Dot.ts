@@ -8,7 +8,7 @@ export class Dot extends Series.SeriesFactory {
 
   public type: string = Options.SeriesOptions.TYPE.DOT;
 
-  updateData(group: d3.selection.Update<Options.ISeriesOptions>, series: Options.SeriesOptions, index: number, numSeries: number) {
+  updateData(group: d3.Selection<any, Options.ISeriesOptions, any, any>, series: Options.SeriesOptions, index: number, numSeries: number) {
     var {xAxis, yAxis} = this.getAxes(series);
 
     var dotsData = this.data.getDatasetValues(series, this.options).filter(series.defined);
@@ -56,7 +56,7 @@ export class Dot extends Series.SeriesFactory {
         .transition()
         .call(this.factoryMgr.getBoundFunction('transitions', 'exit'))
         .call(initPoint)
-        .each('end', function() {
+        .on('end', function() {
           d3.select(this).remove();
         });
     } else {
@@ -77,9 +77,7 @@ export class Dot extends Series.SeriesFactory {
     }
   }
 
-  styleSeries(group: d3.Selection<Options.SeriesOptions>) {
-    group.style({
-      'stroke': (d) => d.color
-    });
+  styleSeries(group: d3.Selection<any, Options.SeriesOptions, any, any>) {
+    group.style('stroke', (d) => d.color);
   }
 }

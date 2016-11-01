@@ -13,7 +13,7 @@ export class Column extends Series.SeriesFactory {
   private outerPadding: number = (this.gapFactor / 2) * 3;
   private columnsWidth: number = 0;
 
-  public innerXScale: d3.scale.Ordinal<string, number>;
+  public innerXScale: d3.ScaleBand<string>;
 
   softUpdate() {
     var series = this.options.getSeriesByType(this.type).filter((s) => s.visible);
@@ -45,16 +45,20 @@ export class Column extends Series.SeriesFactory {
   updateColumnScale(series: Options.ISeriesOptions[], options: Options.Options) {
     var halfWidth = this.columnsWidth * series.length / 2;
 
-    this.innerXScale = d3.scale.ordinal()
+    // TODO See https://github.com/d3/d3/blob/master/CHANGES.md#scales-d3-scale
+    // if this is messed up
+    this.innerXScale = d3.scaleBand()
       .domain(series.map((s) => s.id))
-      .rangeBands([-halfWidth, halfWidth], 0, 0.1);
+      .range([-halfWidth, halfWidth])
+      .paddingInner(0)
+      .paddingOuter(0.1);
   }
 
   getTooltipPosition(series: Options.ISeriesOptions) {
-    return this.innerXScale(series.id) + this.innerXScale.rangeBand() / 2;
+    return this.innerXScale(series.id) + this.innerXScale.step() / 2;
   }
 
-  updateData(group: d3.selection.Update<Options.ISeriesOptions>, series: Options.SeriesOptions, index: number, numSeries: number) {
+  updateData(group: d3.Selection<any, Options.ISeriesOptions, any, any>, series: Options.SeriesOptions, index: number, numSeries: number) {
     var {xAxis, yAxis} = this.getAxes(series);
 
     var colsData = this.data.getDatasetValues(series, this.options).filter(series.defined);
@@ -65,7 +69,7 @@ export class Column extends Series.SeriesFactory {
       s.attr({
         x: xFn,
         y: (d) => yAxis.scale(d.y0),
-        width: this.innerXScale.rangeBand(),
+        width: this.innerXScale.step(),
         height: 0
       });
     };
@@ -74,14 +78,14 @@ export class Column extends Series.SeriesFactory {
       s.attr({
         x: xFn,
         y: (d) => d.y1 > 0 ? yAxis.scale(d.y1) : yAxis.scale(d.y0),
-        width: this.innerXScale.rangeBand(),
+        width: this.innerXScale.step(),
         height: (d) => Math.abs(yAxis.scale(d.y0) - yAxis.scale(d.y1))
       })
       .style('opacity', series.visible ? 1 : 0);
     };
 
     var cols = group.selectAll('.' + this.type)
-      .data(colsData, (d) => '' + d.x);
+      .data(colsData, (d: Utils.IPoint) => '' + d.x);
 
     if (this.factoryMgr.get('transitions').isOn()) {
       cols.enter()
@@ -105,7 +109,7 @@ export class Column extends Series.SeriesFactory {
         .transition()
         .call(this.factoryMgr.getBoundFunction('transitions', 'exit'))
         .call(initCol)
-        .each('end', function() {
+        .on('end', function() {
           d3.select(this).remove();
         });
     } else {
@@ -126,11 +130,11 @@ export class Column extends Series.SeriesFactory {
     }
   }
 
-  styleSeries(group: d3.Selection<Options.SeriesOptions>) {
-    group.style({
-      'fill': (d) => d.color,
-      'stroke': (d) => d.color,
-      'stroke-width': 1
-    });
+  styleSeries(group: d3.Selection<any, Options.SeriesOptions, any, any>) {
+    group
+      .style('fill', (d) => d.color)
+      .style('stroke', (d) => d.color)
+      .style('stroke-width', 1)
+    ;
   }
 }

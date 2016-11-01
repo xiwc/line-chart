@@ -8,7 +8,7 @@ import * as Options from '../options/_index';
 
 export class EventManager {
 
-  private _dispatch : d3.Dispatch;
+  private _dispatch : d3.Dispatch<any>;
   private data: Utils.Data;
   private options: Options.Options;
 
@@ -88,7 +88,7 @@ export class EventManager {
   }
 
   trigger(event: string, ...args: any[]) : EventManager {
-    this._dispatch[event].apply(this, args);
+    this._dispatch.apply(event, this, args);
     return this;
   }
 
@@ -96,37 +96,41 @@ export class EventManager {
     args.push(this.data);
     args.push(this.options);
 
-    this._dispatch[event].apply(this, args);
+    this._dispatch.apply(event, this, args);
 
     return this;
   }
 
-  datumEnter(series: Options.SeriesOptions, options: Options.Options) {
-    return (selection: d3.Selection<Utils.IPoint>) => {
+  // TODO maybe improve the return type... maybe.
+  datumEnter(series: Options.SeriesOptions, options: Options.Options): any {
+    return (selection: d3.Selection<any, Utils.IPoint, any, any>) => {
       return selection.on('mouseenter', (d, i) => {
         this.trigger('enter', d, i, series, options);
       });
     };
   }
 
-  datumOver(series: Options.SeriesOptions, options: Options.Options) {
-    return (selection: d3.Selection<Utils.IPoint>) => {
+  // TODO maybe improve the return type... maybe.
+  datumOver(series: Options.SeriesOptions, options: Options.Options): any {
+    return (selection: d3.Selection<any, Utils.IPoint, any, any>) => {
       return selection.on('mouseover', (d, i) => {
         this.trigger('over', d, i, series, options);
       });
     };
   }
 
-  datumMove(series: Options.SeriesOptions, options: Options.Options) {
-    return (selection: d3.Selection<Utils.IPoint>) => {
+  // TODO maybe improve the return type... maybe.
+  datumMove(series: Options.SeriesOptions, options: Options.Options): any {
+    return (selection: d3.Selection<any, Utils.IPoint, any, any>) => {
       return selection.on('mousemove', (d, i) => {
         this.trigger('over', d, i, series, options);
       });
     };
   }
 
-  datumLeave(series: Options.SeriesOptions, options: Options.Options) {
-    return (selection: d3.Selection<Utils.IPoint>) => {
+  // TODO maybe improve the return type... maybe.
+  datumLeave(series: Options.SeriesOptions, options: Options.Options): any {
+    return (selection: d3.Selection<any, Utils.IPoint, any, any>) => {
       return selection.on('mouseleave', (d, i) => {
         this.trigger('leave', d, i, series, options);
       });
@@ -134,7 +138,7 @@ export class EventManager {
   }
 
   // That would be so cool to have native dblclick support in D3...
-  listenForDblClick(selection: d3.Selection<any>, callback: Function, listenerSuffix: string): d3.Selection<any> {
+  listenForDblClick(selection: d3.Selection<any, any, any, any>, callback: Function, listenerSuffix: string): d3.Selection<any, any, any, any> {
     let down,
       tolerance = 5,
       last,

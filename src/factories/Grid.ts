@@ -8,9 +8,9 @@ import { Container } from './Container';
 
 export class Grid extends BaseFactory {
 
-  public svg: d3.Selection<any>;
-  public xAxis: d3.svg.Axis;
-  public yAxis: d3.svg.Axis;
+  public svg: d3.Selection<any, any, any, any>;
+  public xAxis: d3.Axis<number>;
+  public yAxis: d3.Axis<number>;
 
   create() {
     this.svg = this.factoryMgr.get('container').axes
@@ -40,7 +40,10 @@ export class Grid extends BaseFactory {
       }
 
       sel.attr('transform', 'translate(0, ' + dim.innerHeight + ')')
-         .call(this.xAxis.tickSize(-dim.innerHeight, 0));
+         .call(this.xAxis
+           .tickSizeInner(-dim.innerHeight)
+           .tickSizeOuter(0)
+         );
     }
 
     if (this.yAxis) {
@@ -53,7 +56,10 @@ export class Grid extends BaseFactory {
       }
 
       sel
-        .call(this.yAxis.tickSize(-dim.innerWidth, 0));
+        .call(this.yAxis
+          .tickSizeInner(-dim.innerWidth)
+          .tickSizeOuter(0)
+        );
     }
   }
 
@@ -66,24 +72,28 @@ export class Grid extends BaseFactory {
     var container = <Container> this.factoryMgr.get('container');
     var dim: Options.Dimensions = container.getDimensions();
 
+
     if (options.grid.x) {
-      this.xAxis = <d3.svg.Axis> this.factoryMgr.get('x-axis').cloneAxis()
+      this.xAxis = <d3.Axis<number>> this.factoryMgr.get('x-axis').cloneAxis()
         .tickSize(-dim.innerHeight, 0);
 
       this.svg.select('.x-grid')
+        .attr('transform', 'translate(0, ' + dim.innerHeight + ')')
         .transition()
         .call(this.factoryMgr.getBoundFunction('transitions', 'edit'))
-        .attr('transform', 'translate(0, ' + dim.innerHeight + ')')
-        .call(this.xAxis);
+        .call(this.xAxis as any);
     }
 
     if (options.grid.y) {
-      this.yAxis = <d3.svg.Axis> this.factoryMgr.get('y-axis').cloneAxis();
+      this.yAxis = <d3.Axis<number>> this.factoryMgr.get('y-axis').cloneAxis();
 
       this.svg.select('.y-grid')
         .transition()
         .call(this.factoryMgr.getBoundFunction('transitions', 'edit'))
-        .call(this.yAxis.tickSize(-dim.innerWidth, 0));
+        .call(this.yAxis
+          .tickSizeInner(-dim.innerWidth)
+          .tickSizeOuter(0) as any
+        );
     }
 
     this._updateVisibility(options);

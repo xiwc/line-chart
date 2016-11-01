@@ -120,7 +120,10 @@ export class Pan extends BaseFactory {
 
         if (!event.altKey) {
           this.isActive = true;
-          [xStart, yStart] = d3.mouse(event.currentTarget);
+
+          // TODO fix this typing
+          [xStart, yStart] = d3.mouse(event.currentTarget as any);
+
           this.eventMgr.on(k('window-mouseup'), onMouseUp);
           this.eventMgr.on(k('window-mousemove'), onMouseMove);
         }

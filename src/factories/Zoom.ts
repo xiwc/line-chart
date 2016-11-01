@@ -9,7 +9,7 @@ import { Axis } from './Axis';
 
 export class Zoom extends BaseFactory {
   private isActive: Boolean = false;
-  private rect: d3.Selection<any>;
+  private rect: d3.Selection<any, any, any, any>;
 
   private xStartFn: (x: number) => number;
   private xEndFn: (y: number) => number;
@@ -61,12 +61,12 @@ export class Zoom extends BaseFactory {
     [xStart, xEnd] = xStart > xEnd ? [xEnd, xStart] : [xStart, xEnd];
     [yStart, yEnd] = yStart > yEnd ? [yEnd, yStart] : [yStart, yEnd];
 
-    this.rect.attr({
-      x: xStart,
-      width: xEnd - xStart,
-      y: yStart,
-      height: yEnd - yStart
-    }).style('opacity', '1');
+    this.rect
+      .attr('x', xStart)
+      .attr('width', xEnd - xStart)
+      .attr('y', yStart)
+      .attr('height', yEnd - yStart)
+      .style('opacity', '1');
   }
 
   hide() {
@@ -128,13 +128,13 @@ export class Zoom extends BaseFactory {
           this.isActive = true;
           this.eventMgr.on(k('window-mouseup'), onMouseUp);
 
-          [xStart, yStart] = d3.mouse(event.currentTarget);
+          [xStart, yStart] = d3.mouse(d3.event.currentTarget);
           xStart = this.xStartFn(xStart);
           yStart = this.yStartFn(yStart);
         }
       }).on(k('mousemove'), () => {
         if (this.isActive) {
-          [xEnd, yEnd] = d3.mouse((<MouseEvent>d3.event).currentTarget);
+          [xEnd, yEnd] = d3.mouse(d3.event.currentTarget);
           xEnd = this.xEndFn(xEnd);
           yEnd = this.yEndFn(yEnd);
 

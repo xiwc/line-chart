@@ -1,8 +1,6 @@
 import * as d3 from 'd3';
 import * as ng from 'angular';
 
-import * as SVG from '../svg/_index';
-
 import * as Utils from '../utils/_index';
 import * as Options from '../options/_index';
 import * as Factory from '../factories/_index';
@@ -13,10 +11,10 @@ interface ITick {
 }
 
 export class Axis extends Factory.BaseFactory {
-  public svg: d3.Selection<any>;
-  private _scale: d3.scale.Linear<number, number> | d3.time.Scale<number, number>;
+  public svg: d3.Selection<any, any, any, any>;
+  private _scale: d3.ScaleLinear<number, number> | d3.ScaleTime<number, number>;
   public scale: (value: number | Date) => number;
-  public d3axis: d3.svg.Axis;
+  public d3axis: d3.Axis<number>;
 
   private options: Options.AxisOptions;
 
@@ -98,7 +96,6 @@ export class Axis extends Factory.BaseFactory {
     this.updateScaleDomain(extent);
 
     this.d3axis = this.getAxis(this._scale, this.options);
-    this.updateAxisOrientation(this.d3axis);
     this.updateAxisContainer(dimensions);
     this.shiftAxisTicks(this.options);
   }
@@ -123,7 +120,7 @@ export class Axis extends Factory.BaseFactory {
   }
 
   updateScaleDomain(extent: number[]) {
-    this._scale.domain(extent);
+    (this._scale as any).domain(extent);
   }
 
   getScaleDomain(): (number|Date)[] {
@@ -201,26 +198,10 @@ export class Axis extends Factory.BaseFactory {
     return fn(value) > fn(a) + (fn(b) - fn(a)) / 2;
   }
 
-  createAxis(vis: d3.Selection<any>) {
+  createAxis(vis: d3.Selection<any, any, any, any>) {
     this.svg = vis
       .append('g')
         .attr('class', 'axis ' + this.side + '-axis');
-  }
-
-  updateAxisOrientation(axis) {
-    if (this.isAbscissas()) {
-      if (this.side === Options.AxisOptions.SIDE.X) {
-        axis.orient('bottom');
-      } else {
-        axis.orient('top');
-      }
-    } else {
-      if (this.side === Options.AxisOptions.SIDE.Y) {
-        axis.orient('left');
-      } else {
-        axis.orient('right');
-      }
-    }
   }
 
   updateAxisContainer(dim: Options.Dimensions) {
@@ -259,53 +240,49 @@ export class Axis extends Factory.BaseFactory {
     return this.options.type === Options.AxisOptions.TYPE.DATE;
   }
 
-  getScale(): d3.scale.Linear<number, number> | d3.time.Scale<number, number> {
+  getScale(): d3.ScaleLinear<number, number> | d3.ScaleTime<number, number> {
     if (this.options && this.options.type === Options.AxisOptions.TYPE.DATE) {
-      return d3.time.scale();
+      return d3.scaleTime();
     }
 
     if (this.options && this.options.type === Options.AxisOptions.TYPE.LOG) {
-      return d3.scale.log();
+      return d3.scaleLog();
     }
 
-    return d3.scale.linear();
+    return d3.scaleLinear();
   }
 
-  getAxis(scale: d3.scale.Linear<number, number> | d3.time.Scale<number, number>, options: Options.AxisOptions): d3.svg.Axis {
-    var axis: any;
-
-    // Create and return a D3 Axis generator
-    if (options.hasDynamicTicks()) {
-      axis = SVG.twoSpeedAxis()
-        .scale(scale);
-    } else {
-      axis = d3.svg.axis()
-        .scale(scale);
-    }
+  getAxis(scale: d3.ScaleLinear<number, number> | d3.ScaleTime<number, number>, options: Options.AxisOptions): d3.Axis<number> {
+    var axis = this.getRegularAxis(scale);
 
     options.configure(axis);
 
     return axis;
   }
 
-  cloneAxis(): d3.svg.Axis {
-    var axis: d3.svg.Axis;
-
-    if (this.options && this.options.hasDynamicTicks()) {
-      axis = SVG.twoSpeedAxis()
-        .ticks(this.d3axis.ticks());
+  getRegularAxis(scale: d3.ScaleLinear<number, number> | d3.ScaleTime<number, number>): d3.Axis<number> {
+    if (this.isAbscissas()) {
+      if (this.side === Options.AxisOptions.SIDE.X) {
+        return d3.axisBottom(scale) as d3.Axis<number>;
+      } else {
+        return d3.axisTop(scale) as d3.Axis<number>;
+      }
     } else {
-      axis = d3.svg.axis()
-        .ticks(this.d3axis.ticks()[0]);
+      if (this.side === Options.AxisOptions.SIDE.Y) {
+        return d3.axisLeft(scale) as d3.Axis<number>;
+      } else {
+        return d3.axisRight(scale) as d3.Axis<number>;
+      }
     }
+  }
 
-    return axis
+  cloneAxis(): d3.Axis<number> {
+
+    return this.getRegularAxis(this._scale)
+      .ticks(this.d3axis.tickArguments()[0])
       .scale(this.d3axis.scale())
-      .orient(this.d3axis.orient())
       .tickValues(this.d3axis.tickValues())
-      .tickSize(this.d3axis.tickSize());
-
-      // dafuq is wrong with this tslinter ???
-      // .tickFormat(this.d3axis.tickFormat);
+      .tickSize(this.d3axis.tickSize())
+      .tickFormat(this.d3axis.tickFormat());
   }
 }

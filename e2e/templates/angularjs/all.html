@@ -53,7 +53,7 @@
 
     <div class="example <%=example.name%>" ng-controller="<%=example.name%>Ctrl">
       <div class="example-title">
-        <a id="<%=example.name%>" href="/test/e2e/<%=example.name%>.html"><%=example.name%></a>
+        <a id="<%=example.name%>" href="/<%=example.name%>.html"><%=example.name%></a>
       </div>
       <%=example.data.angular.html%>
     </div>
@@ -63,7 +63,7 @@
 
   </div>
   <script src="/angular/angular.js"></script>
-  <script src="/d3/d3.min.js"></script>
+  <script src="/d3/build/d3.js"></script>
   <script src="LineChart.js"></script>
   <script type="text/javascript">
 

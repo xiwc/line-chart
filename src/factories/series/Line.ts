@@ -8,27 +8,26 @@ export class Line extends Series.SeriesFactory {
 
   public type: string = Options.SeriesOptions.TYPE.LINE;
 
-  updateData(group: d3.selection.Update<Options.ISeriesOptions>, series: Options.SeriesOptions, index: number, numSeries: number) {
+  updateData(group: d3.Selection<any, Options.ISeriesOptions, any, any>, series: Options.SeriesOptions, index: number, numSeries: number) {
     group.classed('dashed', series.isDashed());
 
     var {xAxis, yAxis} = this.getAxes(series);
 
     var lineData = this.data.getDatasetValues(series, this.options);
 
-
-    var initLine = d3.svg.line<Utils.IPoint>()
+    var initLine = d3.line<Utils.IPoint>()
       .defined(series.defined)
       .x((d) => xAxis.scale(d.x))
       .y(<number>(yAxis.range()[0]))
-      .interpolate(series.interpolation.mode)
-      .tension(series.interpolation.tension);
+      .curve(Utils.Interpolation.getInterpolation(series.interpolation.mode, series.interpolation.tension))
+    ;
 
-    var updateLine = d3.svg.line<Utils.IPoint>()
+    var updateLine = d3.line<Utils.IPoint>()
       .defined(series.defined)
       .x((d) => xAxis.scale(d.x))
       .y((d) => yAxis.scale(d.y1))
-      .interpolate(series.interpolation.mode)
-      .tension(series.interpolation.tension);
+      .curve(Utils.Interpolation.getInterpolation(series.interpolation.mode, series.interpolation.tension))
+    ;
 
     var line = group.selectAll('.' + this.type)
       .data([lineData]);
@@ -51,8 +50,8 @@ export class Line extends Series.SeriesFactory {
       line.exit()
         .transition()
         .call(this.factoryMgr.getBoundFunction('transitions', 'exit'))
-        .attr('d', (d) => initLine(d))
-        .each('end', function() {
+        .attr('d', (d: Utils.IPoint[]) => initLine(d))
+        .on('end', function() {
           d3.select(this).remove();
         });
     } else {
@@ -70,11 +69,11 @@ export class Line extends Series.SeriesFactory {
     }
   }
 
-  styleSeries(group: d3.Selection<Options.SeriesOptions>) {
-    group.style({
-      'fill': 'none',
-      'stroke': (s) => s.color,
-      'stroke-dasharray': (s) => s.isDashed() ? '10,3' : undefined
-    });
+  styleSeries(group: d3.Selection<any, Options.SeriesOptions, any, any>) {
+    group
+      .style('fill', 'none')
+      .style('stroke', (s) => s.color)
+      .style('stroke-dasharray', (s) => s.isDashed() ? '10,3' : undefined)
+    ;
   }
 }
