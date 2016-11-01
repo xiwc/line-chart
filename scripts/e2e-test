@@ -7,35 +7,12 @@ const glob = require('glob');
 const path = require('path');
 const Q = require('q');
 const serve = require('./serve');
-const tsc = require('typescript');
 const writeFile = require('./writeFile');
-
-const tscOptions = {};
-
-const transpile = () => {
-  const deferred = Q.defer();
-  var jsFiles = [];
-
-  glob('e2e/tests/**/*.e2e.ts', (er, files) => {
-    files.forEach(file => {
-      const name = path.basename(file, path.extname(file));
-      const data = String(fs.readFileSync(file, 'utf8'));
-      const { outputText } = tsc.transpileModule(data, tscOptions);
-
-      jsFiles.push('.tmp/test/e2e/' + name + '.js');
-      writeFile('.tmp/test/e2e/' + name + '.js', outputText);
-    });
-
-    deferred.resolve(jsFiles);
-  });
-
-  return deferred.promise;
-};
 
 const runTests = () => {
   const deferred = Q.defer();
 
-  glob('.tmp/test/e2e/*.e2e.js', (er, files) => {
+  glob('e2e/tests/*.e2e.js', (er, files) => {
     let child = exec('protractor --specs ' + files.join(',') + ' config/protractor.conf.js');
 
     child.stdout.pipe(process.stdout);
@@ -55,7 +32,7 @@ const run = (project) => {
     .then(server.stop);
 };
 
-Q.all([transpile(), generateDemo()])
+generateDemo()
   .then(run.bind(this, 'react'))
   .then(run.bind(this, 'angularjs'))
   .then(process.exit)

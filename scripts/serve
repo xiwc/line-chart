@@ -4,10 +4,10 @@ const express = require('express');
 const serveStatic = require('serve-static');
 const Q = require('q');
 
-const serve = function(project) {
+const serve = function(project, port) {
   if (['angularjs', 'react'].indexOf(project) === -1) throw new Error('Unsupported project : ' + project);
 
-  const port = 1234;
+  port = port || 1234;
 
   const app = express();
   var server;
@@ -34,7 +34,7 @@ const serve = function(project) {
 };
 
 if (require.main === module) {
-  serve(process.argv[2]).start();
+  serve(process.argv[2], process.argv[3]).start();
 } else {
   module.exports = serve;
 }

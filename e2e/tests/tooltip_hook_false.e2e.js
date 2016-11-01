@@ -1,28 +1,20 @@
-/// <reference path='../test.e2e.ts' />
-
-describe('Tooltip with hook - returns false', function() {
-  beforeEach(function() {
+"use strict";
+describe('Tooltip with hook - returns false', function () {
+  beforeEach(function () {
     browser.get('tooltip_hook_false.html');
   });
-
-  it('should generate a chart', function() {
+  it('should generate a chart', function () {
     var chart = element(by.css('.chart'));
-
     expect(chart.isPresent()).toBe(true);
     expect(chart.getTagName()).toBe('svg');
-
     var tooltip = element(by.css('.chart-tooltip'));
     expect(tooltip.isPresent()).toBe(true);
   });
-
-  it('should not show a tooltip', function() {
+  it('should not show a tooltip', function () {
     var chart = element(by.css('.chart'));
     var tooltip = element(by.css('.chart-tooltip'));
-
     expect(tooltip.isDisplayed()).toBeFalsy();
-
-    browser.actions().mouseMove(chart as any).perform();
-
+    browser.actions().mouseMove(chart).perform();
     expect(tooltip.isDisplayed()).toBeFalsy();
   });
 });

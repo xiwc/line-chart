@@ -43,8 +43,8 @@ export class Area extends SeriesFactory {
 
       const update = (_area) => {
         _area
-          // .transition()
-          // .call(this.factoryMgr.getBoundFunction('transitions', 'enter'))
+          .transition()
+          .call(this.factoryMgr.getBoundFunction('transitions', 'enter'))
           .attr('d', (d) => updateArea(d));
       };
 
@@ -57,8 +57,8 @@ export class Area extends SeriesFactory {
           .call(update);
 
       area.exit()
-        // .transition()
-        // .call(this.factoryMgr.getBoundFunction('transitions', 'exit'))
+        .transition()
+        .call(this.factoryMgr.getBoundFunction('transitions', 'exit'))
         .attr('d', (d) => initArea(d as Utils.IPoint[]))
         .on('end', function() { d3.select(this).remove(); });
     } else {
