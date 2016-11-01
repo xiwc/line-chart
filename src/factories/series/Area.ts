@@ -13,18 +13,20 @@ export class Area extends SeriesFactory {
     var {xAxis, yAxis} = this.getAxes(series);
     var areaData = this.data.getDatasetValues(series, this.options);
 
+    var isOkay = (value) => isFinite(value) && !isNaN(value);
+
     var initArea = d3.area<Utils.IPoint>()
       .defined(series.defined)
       .x((d) => xAxis.scale(d.x))
-      .y0(<number>(yAxis.range()[0]))
-      .y1(<number>(yAxis.range()[0]))
+      .y0(yAxis.range()[0])
+      .y1(yAxis.range()[0])
       .curve(Utils.Interpolation.getInterpolation(series.interpolation.mode, series.interpolation.tension))
     ;
 
     var updateArea = d3.area<Utils.IPoint>()
       .defined(series.defined)
       .x((d) => xAxis.scale(d.x))
-      .y0((d) => isNaN(yAxis.scale(d.y0)) ? <number>yAxis.range()[0] : yAxis.scale(d.y0))
+      .y0((d) => isOkay(yAxis.scale(d.y0)) ? yAxis.scale(d.y0) : yAxis.range()[0])
       .y1((d) => yAxis.scale(d.y1))
       .curve(Utils.Interpolation.getInterpolation(series.interpolation.mode, series.interpolation.tension))
     ;
@@ -41,8 +43,8 @@ export class Area extends SeriesFactory {
 
       const update = (_area) => {
         _area
-          .transition()
-          .call(this.factoryMgr.getBoundFunction('transitions', 'enter'))
+          // .transition()
+          // .call(this.factoryMgr.getBoundFunction('transitions', 'enter'))
           .attr('d', (d) => updateArea(d));
       };
 
@@ -55,8 +57,8 @@ export class Area extends SeriesFactory {
           .call(update);
 
       area.exit()
-        .transition()
-        .call(this.factoryMgr.getBoundFunction('transitions', 'exit'))
+        // .transition()
+        // .call(this.factoryMgr.getBoundFunction('transitions', 'exit'))
         .attr('d', (d) => initArea(d as Utils.IPoint[]))
         .on('end', function() { d3.select(this).remove(); });
     } else {
