@@ -12,6 +12,7 @@ before_install:
 - export DISPLAY=:99.0
 - sh -e /etc/init.d/xvfb start
 - npm i
+- webdriver-manager update
 script: npm run tests
 notifications:
   webhooks:

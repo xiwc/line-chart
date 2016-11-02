@@ -2,7 +2,8 @@ import * as d3 from 'd3';
 
 import * as Factory from '../factories/_index';
 
-import { IPoint, Dataset } from './Dataset';
+import { IPoint } from './IPoint';
+import { Dataset } from './Dataset';
 
 import * as Options from '../options/_index';
 

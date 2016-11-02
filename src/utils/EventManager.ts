@@ -1,10 +1,7 @@
 import * as d3 from 'd3';
 
 import * as Utils from '../utils/_index';
-import { IPoint } from '../utils/dataset';
-
 import * as Options from '../options/_index';
-
 
 export class EventManager {
 

@@ -1,9 +1,3 @@
-export interface IPoint {
-  x: number;
-  y0: number;
-  y1: number;
-}
-
 export class Dataset {
 
   // ID of the dataset
