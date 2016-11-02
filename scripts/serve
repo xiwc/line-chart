@@ -3,9 +3,10 @@
 const express = require('express');
 const serveStatic = require('serve-static');
 const Q = require('q');
+const supportedProjects = require('./supported-projects');
 
 const serve = function(project, port) {
-  if (['angularjs', 'react'].indexOf(project) === -1) throw new Error('Unsupported project : ' + project);
+  if (supportedProjects.indexOf(project) === -1) throw new Error('Unsupported project : ' + project);
 
   port = port || 1234;
 

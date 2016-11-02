@@ -7,9 +7,10 @@ const hjson = require('hjson');
 const Q = require('q');
 const path = require('path');
 const writeFile = require('./writeFile');
+const supportedProjects = require('./supported-projects');
 
 const generateHTML = function(project) {
-  if (['angularjs', 'react'].indexOf(project) === -1) throw new Error('Unsupported project : ' + project);
+  if (supportedProjects.indexOf(project) === -1) throw new Error('Unsupported project : ' + project);
 
   const deferred = Q.defer();
   const singleTemplate = _.template(String(fs.readFileSync('e2e/templates/' + project + '/single.html')));
@@ -37,7 +38,7 @@ const generateHTML = function(project) {
 };
 
 const generateAll = function() {
-  return Q.all([generateHTML('react'), generateHTML('angularjs')]);
+  return Q.all(supportedProjects.map(generateHTML));
 };
 
 if (require.main === module) {
